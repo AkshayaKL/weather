@@ -1,0 +1,220 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Weather</title>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+          <script type="text/javascript" src="city_state.js"></script>
+    </head>
+    <body>
+     <div id="widget">
+<form>
+
+ <select onchange="set_country(this,country,city_state)" size="1" name="region">
+<option value="" selected="selected">SELECT REGION</option>
+<option value=""></option>
+<script type="text/javascript">
+setRegions(this);
+</script>
+</select>
+ <select id="country" name="country" size="1" disabled="disabled" onchange="set_city_state(this,city_state)"></select>
+ <select id="state"name="city_state" size="1" disabled="disabled" onchange="print_city_state(country,this)"></select>
+</form>
+<div id="txtregion"></div>
+<div id="txtplacename"></div>
+<button id = "getIt" onclick = "shiftMap()" style="color:red;background:black;">SET</button><br>
+<input type="text" id="input"><p id="o"></p></input><button id = "getIt" onclick = "initialise()" style="color:red;background:black;">SUBMIT</button><br>
+
+ </div>
+
+    <p>
+        <button id = "getIt" onclick = "geoFindMe()" style="color:red;background:black;">Get temperature of    your region</button></p>
+
+    <p id="out"></p>
+    <p id="googleMap", style="width:800px;height:400px;position:relative;left:50px;top:20px;"></p><br>
+     <p id="comment"></p>
+     <script>
+        var latitude=20.59;
+        var longitude=78.46;
+        var output = document.getElementById("out");
+        var marker = new google.maps.Marker({position:new google.maps.LatLng(39,39),draggable:true,animation: google.maps.Animation.DROP});
+        var temperature=0; 
+        var mapProp,map,input,autocomplete; 
+        function initialise()
+{
+ var spo=input.value;
+ if(spo)
+  {$.getJSON("http:api.openweathermap.org/data/2.5/weather?q=" + spo + "&appid=c7e4370922cc1df436e14e3c50deb792",function(data){
+      
+         temperature=Math.round(data.main.temp-273);
+        document.getElementById("comment").innerHTML=temperature;
+         document.getElementById("comment").innerHTML+="degree Celsius";
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+="Wind speed  "+data.wind.speed ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.main.humidity;
+        document.getElementById("comment").innerHTML+= "   Humidty" ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.name+"  "+data.sys.country;
+        latitude=data.coord.lat;
+        longitude=data.coord.lon;
+         
+         myMap();
+                
+                                                     });}
+}
+
+   
+          
+           
+
+          function geoFindMe() {
+ 
+           if (!navigator.geolocation){
+                output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+               return;
+                                      }
+
+           function success(position) {
+              latitude  = position.coords.latitude;
+              longitude = position.coords.longitude;
+              output.innerHTML+= '<p>Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
+
+                              displaytemp();myMap();
+              }
+
+
+
+         function error() {
+           output.innerHTML = "Unable to retrieve your location";
+                         }
+
+         output.innerHTML = "<p>Locating…</p>";
+
+           navigator.geolocation.getCurrentPosition(success, error);
+                         }
+        
+      function displaytemp()
+      {
+           $.getJSON("http:api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude +     "&appid=c7e4370922cc1df436e14e3c50deb792",function(data){
+       
+         temperature=Math.round(data.main.temp-273);
+        document.getElementById("comment").innerHTML=temperature;
+         document.getElementById("comment").innerHTML+="degree Celsius";
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+="Wind speed  "+data.wind.speed ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.main.humidity;
+        document.getElementById("comment").innerHTML+= "   Humidty" ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.name+"  "+data.sys.country;
+       
+         
+                
+                                                     });return temperature;
+}
+     
+
+
+function myMap() {
+ mapProp= {
+    
+    center:new google.maps.LatLng(latitude,longitude),
+    zoom:7,
+};
+ input = document.getElementById('input');
+  autocomplete = new google.maps.places.Autocomplete(input);
+ map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+ marker = new google.maps.Marker({position:mapProp.center,draggable:true,animation: google.maps.Animation.DROP});
+  marker.setMap(map);
+ marker.addListener('click',toggleBounce);
+ 
+ function toggleBounce() 
+        {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+     google.maps.event.addListener(marker, "dragend", function(event) {
+   
+                                         placeMarker(map, event.latLng);
+                                                                     });
+
+         function placeMarker(map, location) {
+                                              getting();
+                                              var marker2 = new google.maps.Circle({
+                                              center:location,
+                                                radius:5000,
+                                               strokeColor:"#0000FF",
+                                                strokeOpacity:0.8,
+                                                strokeWeight:2,
+                                                fillColor:"#0000FF",
+                                                 fillOpacity:0.4
+      
+                                                 });
+                                                latitude=location.lat;
+                                               longitude=location.long;
+    
+                                                   
+                                                   var infowindow = new google.maps.InfoWindow({
+                                          content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng(),position:location
+                                                                                               });
+                                             marker2.setMap(map);
+                                           infowindow.open(map,marker2);
+
+                                                 }}  
+
+
+
+
+
+      
+          function getting()
+              {latitude = marker.getPosition().lat();
+                longitude = marker.getPosition().lng();
+                 output.innerHTML=" "; 
+                 displaytemp();
+                 }
+
+
+          function shiftMap()
+   {
+    var country=document.getElementById("txtregion").textContent;
+    var state=document.getElementById("txtplacename").textContent; 
+    var region=country+","+state;
+    
+     $.getJSON("http:api.openweathermap.org/data/2.5/weather?q=" + state + "&appid=c7e4370922cc1df436e14e3c50deb792",function(data){
+       
+         temperature=Math.round(data.main.temp-273);
+        document.getElementById("comment").innerHTML=temperature;
+         document.getElementById("comment").innerHTML+="degree Celsius";
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+="Wind speed  "+data.wind.speed ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.main.humidity;
+        document.getElementById("comment").innerHTML+= "   Humidty" ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.name+"  "+data.sys.country;
+        latitude=data.coord.lat;
+        longitude=data.coord.lon;
+         
+         myMap();
+                
+                                                     });}
+ 
+
+
+ 
+         
+                                     
+ 
+
+
+
+    </script>
+
+<script src="https://maps.googleapis.com/maps/api/js??libraries=weather&key=AIzaSyBU4IfO5UHZAfD1KZo1kKPQYwYz4ZI2k8E&callback=myMap&libraries=places"></script>
+
+</body>
+</html>

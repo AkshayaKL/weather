@@ -1,0 +1,383 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Weather</title>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+          <script type="text/javascript" src="city_state.js"></script>
+           <link rel="stylesheet" href="style.css">
+            <meta name="viewport" content="height=device-height,initial-scale=0.3">
+    </head>
+    <body>
+
+     <div id="widget">
+<h4 id="genreg">For a general regional search </h4>
+<form id="sel">
+ 
+ <select onchange="set_country(this,country,city_state)" size="1" name="region">1
+<option value="" selected="selected">SELECT REGION</option>
+<option value=""></option>
+<script type="text/javascript">
+setRegions(this);
+</script>
+</select>
+ <select id="country" name="country" size="1" disabled="disabled" onchange="set_city_state(this,city_state)"></select>
+ <select id="state"name="city_state" size="1" disabled="disabled" onchange="print_city_state(country,this)"></select>
+</form>
+<div id="txtregion"></div>
+<div id="txtplacename"></div>
+<button id = "getIt" onclick = "shiftMap()" style="color:red;background:black;" class="set">SET</button><br>
+<h4 id="specific">A more specific search</h4>
+<input type="text" id="input"></input><button id = "submit" onclick = "initialise()" style="color:red;background:black;">SUBMIT</button><br>
+
+ </div>
+
+    
+         <button id = "getIt" onclick = "geoFindMe()" style="color:red;background:black;" class="we">Find Your weather!!</button></p>
+    
+    <p id="out" ></p>
+    <p id="googleMap", style="width:520px;height:520px;"></p><br><div  id="info"><strong>Drag and place the marker<br> anywhere to get the weather<br>The graph below<br>Shows Last 10 days temperature variation<br>Day 1 is today<br>Day 2 is yesterday..</strong></div>
+    <p id="comment"></p>
+    <canvas id="graph" width="600" height="500"></canvas>
+     
+      
+      
+     <script>  
+       var latitude=20.59;
+        var longitude=78.46;
+        var output = document.getElementById("out");
+        var marker = new google.maps.Marker({position:new google.maps.LatLng(39,39),draggable:true,animation: google.maps.Animation.DROP});
+        var temperature=0; 
+        var mapProp,map,input,autocomplete; 
+          
+           var canvas=document.getElementById("graph").getContext("2d");
+            
+        function initialise()
+{
+ var spo=input.value;
+ if(spo)
+  {$.getJSON("http:api.openweathermap.org/data/2.5/weather?q=" + spo + "&appid=c7e4370922cc1df436e14e3c50deb792",function(data){
+      
+         temperature=Math.round(data.main.temp-273);
+        document.getElementById("comment").innerHTML=temperature;
+         document.getElementById("comment").innerHTML+="degree Celsius";
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+="Wind speed  "+data.wind.speed ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.main.humidity;
+        document.getElementById("comment").innerHTML+= "   Humidty" ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.name+"  "+data.sys.country+"<br>"+data.weather[0].description;
+        var source="http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+       document.getElementById("comment").innerHTML+="<img id=icon></img>";
+       document.getElementById("icon").src=source;
+        //
+     if(data.weather[0].description.includes("sunny"))
+        document.body.style.backgroundImage = "url('https://report.az/storage/news/2d24481fa1ef4a20e1a703f88f8400c4/aee96c6d-d63a-4f9a-897e-3213b477b5fe.jpg')";
+        
+        if(data.weather[0].description.includes("clear"))
+        document.body.style.backgroundImage = "url('https://i.ytimg.com/vi/JHebC3inT6Q/maxresdefault.jpg')";
+        if(data.weather[0].description.includes("few")||data.weather[0].description.includes("scattered"))
+        document.body.style.backgroundImage = "url('http://switchfootdesign.com/downloads/all-sky-with-a-few-whisps-o.jpg')";
+        if(data.weather[0].description.includes("overcast"))
+        document.body.style.backgroundImage = "url('http://wallpapercave.com/wp/4W2pw5V.jpg')";
+        if(data.weather[0].description.includes("rain")||data.weather[0].description.includes("thunderstorm"))
+         document.body.style.backgroundImage = "url('http://wallpapercave.com/wp/QzVCODK.jpg')";
+        if(data.weather[0].description.includes("mist"))
+         document.body.style.backgroundImage="url('https://vignette1.wikia.nocookie.net/demigodshaven/images/f/f5/Mist.jpg/revision/latest?cb=20110102163040')";
+         if(data.weather[0].description.includes("broken"))
+          document.body.style.backgroundImage="url('http://zidbits.com/wp-content/uploads/2011/04/Broken-Cloud-Effect.jpg')";  
+         if(data.weather[0].description.includes("haze")||data.weather[0].description.includes("haze"))
+         document.body.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/MosqueinAbuja.jpg/1200px-MosqueinAbuja.jpg')";              
+        latitude=data.coord.lat;
+        longitude=data.coord.lon;
+         
+         myMap();
+                
+                                                     });}
+}
+
+   
+          
+           
+
+          function geoFindMe() {
+ 
+           if (!navigator.geolocation){
+                output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+               return;
+                                      }
+
+           function success(position) {
+              latitude  = position.coords.latitude;
+              longitude = position.coords.longitude;
+             
+                              displaytemp();myMap();
+              }
+
+
+
+         function error() {
+           output.innerHTML = "Unable to retrieve your location";
+                         }
+
+         output.innerHTML = "<p>Locating…</p>";
+
+           navigator.geolocation.getCurrentPosition(success, error);
+                         }
+        
+      function displaytemp()
+      {
+           $.getJSON("http:api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude +     "&appid=c7e4370922cc1df436e14e3c50deb792",function(data){
+       
+         temperature=Math.round(data.main.temp-273);
+        document.getElementById("comment").innerHTML=temperature;
+         document.getElementById("comment").innerHTML+="degree Celsius";
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+="Wind speed  "+data.wind.speed ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.main.humidity;
+        document.getElementById("comment").innerHTML+= "%  Humidty" ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.name+"  "+data.sys.country+"<br>"+data.weather[0].description;
+       var source="http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+       document.getElementById("comment").innerHTML+="<img id=icon></img>";
+       document.getElementById("icon").src=source;
+       
+          if(data.weather[0].description.includes("sunny"))
+        document.body.style.backgroundImage = "url('https://report.az/storage/news/2d24481fa1ef4a20e1a703f88f8400c4/aee96c6d-d63a-4f9a-897e-3213b477b5fe.jpg')";
+        
+        if(data.weather[0].description.includes("clear"))
+        document.body.style.backgroundImage = "url('https://i.ytimg.com/vi/JHebC3inT6Q/maxresdefault.jpg')";
+        if(data.weather[0].description.includes("few")||data.weather[0].description.includes("scattered"))
+        document.body.style.backgroundImage = "url('http://switchfootdesign.com/downloads/all-sky-with-a-few-whisps-o.jpg')";
+        if(data.weather[0].description.includes("overcast"))
+        document.body.style.backgroundImage = "url('http://wallpapercave.com/wp/4W2pw5V.jpg')";
+        if(data.weather[0].description.includes("rain")||data.weather[0].description.includes("thunderstorm"))
+         document.body.style.backgroundImage = "url('http://wallpapercave.com/wp/QzVCODK.jpg')";
+          if(data.weather[0].description.includes("haze")||data.weather[0].description.includes("haze"))
+         document.body.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/MosqueinAbuja.jpg/1200px-MosqueinAbuja.jpg')"; 
+         if(data.weather[0].description.includes("mist"))
+         document.body.style.backgroundImage="url('https://vignette1.wikia.nocookie.net/demigodshaven/images/f/f5/Mist.jpg/revision/latest?cb=20110102163040')";
+         if(data.weather[0].description.includes("broken"))
+          document.body.style.backgroundImage="url('http://zidbits.com/wp-content/uploads/2011/04/Broken-Cloud-Effect.jpg')";                
+                
+                                                     });
+output.innerHTML=" ";
+}
+     
+
+
+function myMap() {
+ 
+ mapProp= {
+    
+    center:new google.maps.LatLng(latitude,longitude),
+    zoom:10
+};
+canvas=document.getElementById("graph").getContext("2d");
+canvas.clearRect(0,0,1000,600);
+graph(latitude,longitude);
+ input = document.getElementById('input');
+  autocomplete = new google.maps.places.Autocomplete(input);
+ map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+ marker = new google.maps.Marker({position:mapProp.center,draggable:true,animation: google.maps.Animation.DROP});
+  marker.setMap(map);
+ marker.addListener('click',toggleBounce);
+
+ 
+ function toggleBounce() 
+        {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+     google.maps.event.addListener(marker, "dragend", function(event) {
+   
+                                         placeMarker(map, event.latLng);
+                                                                     });
+
+         function placeMarker(map, location) {
+                                              getting();
+                                              
+                                               latitude=marker.getPosition().lat();
+                                                longitude=marker.getPosition().lng();
+                                                                                      
+                                                                                               canvas.clearRect(0,0,1000,600);                                                     
+                                                   graph(latitude,longitude);
+                                                   impcities();
+                                                   
+                                                 }impcities();}
+
+//
+ function impcities()
+   {   var lat0=latitude-20;
+       var lng0 = longitude-20;
+       var lat1 = latitude+20;
+        var lng1 =longitude+20;
+        var infowindow=[];
+        var latitude1,longitude1;
+         
+ $.getJSON("http://api.openweathermap.org/data/2.5/find?lat=" +latitude+ "&lon=" +longitude+ "&cnt=50&apikey=c7e4370922cc1df436e14e3c50deb792",function(data){
+     for(var i=0;i<50;)
+     { 
+       var weather2=Math.round(data.list[i].main.temp-273);
+       var placed=data.list[i].name;
+       longitude1=data.list[i].coord.lon;
+        latitude1=data.list[i].coord.lat;
+         
+       infowindow[i]= new google.maps.InfoWindow({
+         position:new google.maps.LatLng(latitude1,longitude1),
+       content:'<div id="inf">'+weather2+"&#8451<br>"+placed+"</div>",
+         maxWidth: 100,
+           disableAutoPan: true
+           });
+       
+       infowindow[i].open(map); 
+       var iwOuter = $('.gm-style-iw');
+       var iwBackground = iwOuter.prev();
+        iwBackground.children(':nth-child(2)').css({'display' : 'none'});
+
+                   iwBackground.children(':nth-child(4)').css({'display' : 'none'});                       
+     i+=10;
+      
+    
+ 
+    }
+});
+   map.setCenter(new google.maps.LatLng(marker.getPosition().lat(),marker.getPosition().lng()));
+    
+    }
+//
+
+
+      
+          function getting()
+              {latitude = marker.getPosition().lat();
+                longitude = marker.getPosition().lng();
+                 output.innerHTML=" "; 
+                 displaytemp();
+                 }
+
+
+          function shiftMap()
+   {
+    var country=document.getElementById("txtregion").textContent;
+    var state=document.getElementById("txtplacename").textContent; 
+    var region=country+","+state;
+    
+     $.getJSON("http:api.openweathermap.org/data/2.5/weather?q=" + state + "&appid=c7e4370922cc1df436e14e3c50deb792",function(data){
+       
+         temperature=Math.round(data.main.temp-273);
+        document.getElementById("comment").innerHTML=temperature;
+         document.getElementById("comment").innerHTML+="degree Celsius";
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+="Wind speed  "+data.wind.speed ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.main.humidity;
+        document.getElementById("comment").innerHTML+= "   Humidty" ;
+        document.getElementById("comment").innerHTML+="<br>";
+        document.getElementById("comment").innerHTML+=data.name+"  "+data.sys.country+"<br>"+data.weather[0].description+"<br>";
+        var source="http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+       document.getElementById("comment").innerHTML+="<img id=icon></img>";
+       document.getElementById("icon").src=source;
+ 
+        latitude=data.coord.lat;
+        longitude=data.coord.lon;
+       
+         myMap();
+        
+           if(data.weather[0].description.includes("sunny"))
+        document.body.style.backgroundImage = "url('https://report.az/storage/news/2d24481fa1ef4a20e1a703f88f8400c4/aee96c6d-d63a-4f9a-897e-3213b477b5fe.jpg')";
+        
+        if(data.weather[0].description.includes("clear"))
+        document.body.style.backgroundImage = "url('https://i.ytimg.com/vi/JHebC3inT6Q/maxresdefault.jpg')";
+        if(data.weather[0].description.includes("few")||data.weather[0].description.includes("scattered"))
+        document.body.style.backgroundImage = "url('http://switchfootdesign.com/downloads/all-sky-with-a-few-whisps-o.jpg')";
+        if(data.weather[0].description.includes("overcast"))
+        document.body.style.backgroundImage = "url('http://wallpapercave.com/wp/4W2pw5V.jpg')";
+        if(data.weather[0].description.includes("rain")||data.weather[0].description.includes("thunderstorm"))
+         document.body.style.backgroundImage = "url('http://wallpapercave.com/wp/QzVCODK.jpg')";
+           if(data.weather[0].description.includes("mist"))
+         document.body.style.backgroundImage="url('https://vignette1.wikia.nocookie.net/demigodshaven/images/f/f5/Mist.jpg/revision/latest?cb=20110102163040')";
+         if(data.weather[0].description.includes("broken"))
+          document.body.style.backgroundImage="url('http://zidbits.com/wp-content/uploads/2011/04/Broken-Cloud-Effect.jpg')";
+        if(data.weather[0].description.includes("haze")||data.weather[0].description.includes("haze"))
+         document.body.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/MosqueinAbuja.jpg/1200px-MosqueinAbuja.jpg')";     
+                       });
+}
+ 
+ //
+
+
+function graph(latitude,longitude)
+{
+var canvas=document.getElementById("graph").getContext("2d");
+canvas.clearRect(0,0,canvas.width,canvas.height);
+$.getJSON("http://api.openweathermap.org/data/2.5/forecast?lat=" + latitude +"&lon=" + longitude +"&appid=c7e4370922cc1df436e14e3c50deb792",function(data)
+{
+var max=data.list[0].main.temp;
+for(var i=0;i<data.list.length;i++)
+{
+if(data.list[i].main.temp>max)
+max=data.list[i].main.temp;
+}
+var min=data.list[0].main.temp;
+for(var i=0;i<data.list.length;i++)
+{
+if(data.list[i].main.temp<min)
+min=data.list[i].main.temp;
+}
+var scale=500/(max-min);
+canvas.beginPath();
+canvas.moveTo(100,500-((data.list[0].main.temp-min)/(max-min)*400));
+canvas.lineTo(100,500-((data.list[0].main.temp-min)/(max-min)*400));
+var gradient=canvas.createLinearGradient(0,0,400,0);
+gradient.addColorStop("0","magenta");
+gradient.addColorStop("0.5","blue");
+gradient.addColorStop("1.0","red");
+canvas.strokeStyle=gradient;
+canvas.lineWidth=5;
+canvas.stroke();
+canvas.font="15px Arial";
+canvas.fillStyle = "red";
+
+canvas.fillText("Day 1",50,490);
+canvas.lineTo(100,500-((data.list[1].main.temp-min)/(max-min)*400));
+canvas.stroke();
+canvas.font="15px Arial";
+canvas.fillStyle = "red";
+
+canvas.fillText("Day 2",100,490);
+canvas.lineTo(150,500-((data.list[2].main.temp-min)/(max-min)*400));
+canvas.stroke();
+canvas.font="15px Arial";
+canvas.fillStyle = "red";
+
+canvas.fillText("Day 3",150,490);
+var x=200;
+for(var t=3;t<10;t++)
+{
+canvas.lineTo(x,500-((data.list[t].main.temp-min)/(max-min)*400));
+canvas.stroke();
+var ti=t+1;
+var sam="Day"+ti;
+canvas.font="15px Arial";
+canvas.fillStyle = "red";
+
+canvas.fillText(sam,x,490);
+x=x+50;}
+});
+}
+//  
+  
+</script>
+      
+
+    
+<script src="https://maps.googleapis.com/maps/api/js?libraries=weather&key=AIzaSyBU4IfO5UHZAfD1KZo1kKPQYwYz4ZI2k8E&callback=myMap&libraries=places,weather"></script>
+
+
+</body>
+</html>
