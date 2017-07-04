@@ -29,8 +29,14 @@ A web app to display the weather condition of a place
      -The background changes according to the peratining weather conditions  
      -Infowindows showing the temperature of different locations around the current one  
      
-    # Screenshots    
-     -Screenshots have been provided to give detailed look on how the webpage is supposed to look
-     -![Alt text](https://github.com/AkshayaKL/weather/blob/master/screenshots/When%20you%20open%20the%20wp.png "First Page")
-     
- 
+ # Screenshots    
+   -Screenshots have been provided to give detailed look on how the webpage is supposed to look
+    -![Alt text](https://github.com/AkshayaKL/weather/blob/master/screenshots/When%20you%20open%20the%20wp.png "First Page")  
+    -![Alt text](https://github.com/AkshayaKL/weather/blob/master/screenshots/Using%20autofill.png "Second Page")  
+     -![Alt text]( https://github.com/AkshayaKL/weather/blob/master/screenshots/weather%20showing%20after%20autofill.png "Third Page")  
+     ![Alt text]( https://github.com/AkshayaKL/weather/blob/master/screenshots/Graph.png "Fourth Page") 
+     -![Alt text](https://github.com/AkshayaKL/weather/blob/master/screenshots/Using%20the%20drop%20down%20menu.png "Fifth Page")
+     -![Alt text]( https://github.com/AkshayaKL/weather/blob/master/screenshots/graph2.png "Sixth Page")
+     -![Alt text](https://github.com/AkshayaKL/weather/blob/master/screenshots/Background%20change%20as%20weather%20changes.png  "Seventh Page")
+     ![Alt text]( https://github.com/AkshayaKL/weather/blob/master/screenshots/dragging%20marker.png "Eigth Page") 
+     ![Alt text]( https://github.com/AkshayaKL/weather/blob/master/screenshots/background%20change%20for%20haze.png "ninth Page") 
