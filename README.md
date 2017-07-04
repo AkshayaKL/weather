@@ -28,6 +28,9 @@ A web app to display the weather condition of a place
      -Also dragging and placing the marker anywhere on the map,gives the weather details  
      -The background changes according to the peratining weather conditions  
      -Infowindows showing the temperature of different locations around the current one  
+     
     # Screenshots    
-     Screenshots have been provided to give detailed look on how the webpage is supposed to look
+     -Screenshots have been provided to give detailed look on how the webpage is supposed to look
+     -![Alt text](https://github.com/AkshayaKL/weather/blob/master/screenshots/When%20you%20open%20the%20wp.png "First Page")
+     
  
