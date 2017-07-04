@@ -35,7 +35,7 @@ setRegions(this);
          <button id = "getIt" onclick = "geoFindMe()" style="color:red;background:black;" class="we">Find Your weather!!</button></p>
     
     <p id="out" ></p>
-    <p id="googleMap", style="width:520px;height:520px;"></p><br><div  id="info"><strong>Drag and place the marker<br> anywhere to get the weather<br>The graph below<br>Shows Last 10 days temperature variation<br>Day 1 is today<br>Day 2 is yesterday..</strong></div>
+    <canvas id="googleMap", style="width:520px;height:520px;"></canvas><br><div  id="info"><strong>Drag and place the marker<br> anywhere to get the weather<br>The graph below<br>Shows Last 10 days temperature variation<br>Day 1 is today<br>Day 2 is yesterday..</strong></div>
     <p id="comment"></p>
     <canvas id="graph" width="600" height="500"></canvas>
      
@@ -239,10 +239,10 @@ graph(latitude,longitude);
        var iwBackground = iwOuter.prev();
         iwBackground.children(':nth-child(2)').css({'display' : 'none'});
 
-   
-         iwBackground.children(':nth-child(4)').css({'display' : 'none'});                       
+                   iwBackground.children(':nth-child(4)').css({'display' : 'none'});                       
      i+=10;
-     
+      
+    
  
     }
 });
