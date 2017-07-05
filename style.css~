@@ -10,7 +10,21 @@ font-style:oblique;
   position:absolute;
   left:400px;
  top:20px;
-border-radius:520px;
+border-radius:490px;
+margin: 20px;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 1);
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 1); 
+-webkit-filter: contrast(1.4) custom(url(shaders/spherify.vs) mix(url(shaders/spherify.fs) multiply source-atop),
+    50 50 border-box,
+    amount 1,
+    sphereRadius 0.5,
+    sphereAxis -0.41 1 0.19,
+    sphereRotation 43.5,
+    ambientLight 0.15,
+    lightPosition 1 0.87 0.25,
+    lightColor 1 1 1 1,
+    transform perspective(500));
   } 
 #info
 {
@@ -104,6 +118,7 @@ left:20px;
 {
 position:relative;
 left:20px;
+cursor:pointer;
 }
 .we
 {

@@ -10,7 +10,12 @@ font-style:oblique;
   position:absolute;
   left:400px;
  top:20px;
-border-radius:520px;
+border-radius:490px;
+margin: 20px;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 1);
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 1); 
+
   } 
 #info
 {

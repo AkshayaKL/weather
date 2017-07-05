@@ -34,7 +34,7 @@
          <button id = "getIt" onclick = "geoFindMe()" style="color:red;background:black;" class="we">Find Your weather!!</button></p>
     
     <p id="out" ></p>
-    <p id="googleMap", style="width:520px;height:520px;"></p><br><div  id="info"><strong>Drag and place the marker<br> anywhere to get the weather<br>The graph below<br>Shows Last 10 days temperature variation<br>Day 1 is yesterday<br>Day 2 is day before..</strong></div>
+    <p id="googleMap", style="width:500px;height:500px;border-radius:490px;z-index: 50;",scrolling="no"></p><br><div  id="info"><strong>Drag and place the marker<br> anywhere to get the weather<br>The graph below<br>Shows Last 10 days temperature variation<br>Day 1 is yesterday<br>Day 2 is day before..</strong></div>
     <p id="comment"></p>
     <canvas id="graph" width="600" height="500"></canvas>
      
@@ -111,7 +111,8 @@
               longitude = position.coords.longitude;
              //After getting latitude and longitude,it displays weather and shifts map through the two functions listed below respectively
                               displaytemp();myMap();
-              }
+            
+                                                       }
 
 
         //If the location service is not suported by user
@@ -254,6 +255,7 @@ output.innerHTML=" ";
                 longitude = marker.getPosition().lng();
                  output.innerHTML=" "; 
                  displaytemp();
+                 
                  }
 
            //This function is to shift the Map and display temperature for the drop down menu
@@ -282,7 +284,8 @@ output.innerHTML=" ";
                                 longitude=data.coord.lon;
        
                                  myMap();
-        
+                                  for(var t=0;t<10;t++)
+                                    
                                    if(data.weather[0].description.includes("sunny"))
                     document.body.style.backgroundImage = "url('https://report.az/storage/news/2d24481fa1ef4a20e1a703f88f8400c4/aee96c6d-d63a-4f9a-897e-3213b477b5fe.jpg')";
                                 if(data.weather[0].description.includes("clear"))
