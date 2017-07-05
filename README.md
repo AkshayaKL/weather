@@ -26,7 +26,7 @@ A web app to display the weather condition of a place
      -The graph shows the temperature variation over 10 days  
      -Other than that,typing in the location itself in the provided input box[with autofill]will do the same  
      -Also dragging and placing the marker anywhere on the map,gives the weather details  
-     -The background changes according to the peratining weather conditions  
+     -The background changes according to the pertaining weather conditions  
      -Infowindows showing the temperature of different locations around the current one  
      
  # Screenshots    
