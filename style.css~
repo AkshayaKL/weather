@@ -9,7 +9,7 @@ font-style:oblique;
 { 
   position:absolute;
   left:400px;
- top:00px;
+ top:20px;
 border-radius:520px;
   } 
 #info
@@ -66,6 +66,7 @@ size:120%;
 height:30px;
 border-radius:30px;
 top:200px;
+cursor:pointer
 }
 #specific
 {
@@ -91,6 +92,7 @@ left:100px;
 {
 position:relative;
 left:20px;
+cursor:pointer;
 }
 #genreg
 {
@@ -111,6 +113,7 @@ border-radius:100px;
 font-size:20px;
 position:relative;
 left:50px;
+cursor:pointer;
 }
 .we:hover
 {

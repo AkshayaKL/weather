@@ -66,6 +66,7 @@ size:120%;
 height:30px;
 border-radius:30px;
 top:200px;
+cursor:pointer
 }
 #specific
 {
@@ -91,6 +92,7 @@ left:100px;
 {
 position:relative;
 left:20px;
+cursor:pointer;
 }
 #genreg
 {
@@ -102,6 +104,7 @@ left:20px;
 {
 position:relative;
 left:20px;
+cursor:pointer;
 }
 .we
 {
@@ -111,6 +114,7 @@ border-radius:100px;
 font-size:20px;
 position:relative;
 left:50px;
+cursor:pointer;
 }
 .we:hover
 {
