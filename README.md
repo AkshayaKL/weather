@@ -2,7 +2,7 @@
 A web app to display the weather condition of a place
 # My Webpage
 -My site is published at https://akshayakl.github.io/weather/   <br />
- -It doesn't open in chrome and doesn't open properly in firefox because of multiple api calls from openweather.com]  <br />
+ -It doesn't open in chrome and doesn't open properly in firefox because github apparently doesn't support http and all openweather data is in http <br />
  # API'S included  
  -Google map for fetching autofill [to fill in the city options as the user types]  
  -Google Map for getting the map,over which the user can drag the marker and get the weather  
